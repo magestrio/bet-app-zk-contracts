@@ -1,4 +1,16 @@
 {
   "version": 1,
-  "networks": {}
+  "networks": {
+    "berkery-bet-token": {
+      "url": "https://proxy.berkeley.minaexplorer.com/graphql",
+      "keyPath": "keys/berkery-bet-token.json",
+      "fee": "0.5",
+      "smartContract": "BetTokenContract"
+    },
+    "berkery-bet-app": {
+      "url": "https://proxy.berkeley.minaexplorer.com/graphql",
+      "keyPath": "keys/berkery-bet-app.json",
+      "fee": "0.5"
+    }
+  }
 }

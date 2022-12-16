@@ -1,3 +1,5 @@
-import { Add } from './Add.js';
+import { BetTokenContract } from './BetTokenContract.js';
+import { BetAppContract } from './BetAppContract.js';
+import { Bet } from './Bet.js';
 
-export { Add };
+export { BetTokenContract, Bet, BetAppContract };
