@@ -20,14 +20,12 @@ import { Entry } from "./Entry.js";
 import { Event } from "./Event.js";
 
 const ORACLE_PUBLIC_KEY = "B62qmBUxCXKtJLk8f5Gq8QokE5RRBJPEeqkxwhFGwiotsqvKs37UnSA";
-
+const BET_TOKEN_CONTRACT = "B62qpb5buHkzvax1htaj7PQeDD1HEpY6Jt55Vbv3Vsvjf6uvP2V6wa8"
 export class BetAppContract extends SmartContract {
     MIN_BET = UInt64.from(100);
-
-    betTokenAddress = PublicKey.fromBase58('B62qmc57uQ4gTsad4pxNCGAjc64GLVGQDr2FxmDraawwiXaWKrFrHks');
+    betTokenAddress = PublicKey.fromBase58(BET_TOKEN_CONTRACT);
 
     @state(Field) betsTreeRoot = State<Field>();
-
     @state(PublicKey) oraclePublicKey = State<PublicKey>();
 
     events = {
@@ -46,7 +44,9 @@ export class BetAppContract extends SmartContract {
             receive: permissionToEdit,
             editSequenceState: permissionToEdit
         })
+    }
 
+    init() {
         this.betsTreeRoot.set(new MerkleMap().getRoot());
         this.oraclePublicKey.set(PublicKey.fromBase58(ORACLE_PUBLIC_KEY));
     }
@@ -78,9 +78,9 @@ export class BetAppContract extends SmartContract {
         isBetFound.assertTrue();
 
         // Check min bet
-        // bet.betTokenAmount.assertGte(this.MIN_BET);
+        bet.betTokenAmount.assertGte(this.MIN_BET);
 
-        const betTokenContract = new BetTokenContract(this.betTokenAddress);
+        const betTokenContract = new BetTokenContract(PublicKey.fromBase58('B62qpb5buHkzvax1htaj7PQeDD1HEpY6Jt55Vbv3Vsvjf6uvP2V6wa8'));
 
         const bettorTokenAmount = betTokenContract.getBalanceOf(bet.bettorAddress);
         bettorTokenAmount.assertGt(bet.betTokenAmount);

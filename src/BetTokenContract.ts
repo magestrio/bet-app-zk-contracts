@@ -17,7 +17,8 @@ import {
     Reducer,
     Bool,
     Struct,
-    Signature
+    Signature,
+    Poseidon
 } from "snarkyjs";
 
 const tokenSymbol = 'BET'
@@ -103,26 +104,26 @@ export class BetTokenContract extends SmartContract {
     }
 
     @method faucet(receiverAddress: PublicKey, witness: MerkleMapWitness, lastTimeFaucet: UInt64) {
-        // const faucetUsersTreeRoot = this.faucetUsersTreeRoot.get();
-        // this.faucetUsersTreeRoot.assertEquals(faucetUsersTreeRoot);
+        const faucetUsersTreeRoot = this.faucetUsersTreeRoot.get();
+        this.faucetUsersTreeRoot.assertEquals(faucetUsersTreeRoot);
 
-        // // // Check if 24 hours passed since last faucet / or the user has never faucet before
-        // const nextMinFaucetTime = Circuit.if(lastTimeFaucet.equals(UInt64.zero), UInt64.zero, lastTimeFaucet.add(60 * 60 * 1000))
-        // this.network.timestamp.assertBetween(nextMinFaucetTime, UInt64.MAXINT());
+        // // Check if 24 hours passed since last faucet / or the user has never faucet before
+        const nextMinFaucetTime = Circuit.if(lastTimeFaucet.equals(UInt64.zero), UInt64.zero, lastTimeFaucet.add(60 * 60 * 1000))
+        this.network.timestamp.assertBetween(nextMinFaucetTime, UInt64.MAXINT());
 
-        // // UInt64.from(Date.now()).assertGt(lastTimeFaucet.add(60 * 60 * 1000))
+        // UInt64.from(Date.now()).assertGt(lastTimeFaucet.add(60 * 60 * 1000))
 
-        // const [rootBefore, key] = witness.computeRootAndKey(lastTimeFaucet.toFields()[0]);
-        // // Workaround as during the init method execution field is 0
-        // rootBefore.assertEquals(Circuit.if(faucetUsersTreeRoot.equals(Field(0)), new MerkleMap().getRoot(), faucetUsersTreeRoot));
-        // const userKey = Poseidon.hash(receiverAddress.toFields());
-        // key.assertEquals(userKey);
+        const [rootBefore, key] = witness.computeRootAndKey(lastTimeFaucet.toFields()[0]);
+        // Workaround as during the init method execution field is 0
+        rootBefore.assertEquals(Circuit.if(faucetUsersTreeRoot.equals(Field(0)), new MerkleMap().getRoot(), faucetUsersTreeRoot));
+        const userKey = Poseidon.hash(receiverAddress.toFields());
+        key.assertEquals(userKey);
 
-        // const now = this.network.timestamp.get();
-        // this.network.timestamp.assertBetween(now, UInt64.MAXINT());
+        const now = this.network.timestamp.get();
+        this.network.timestamp.assertBetween(now, UInt64.MAXINT());
 
-        // const [rootAfter, _] = witness.computeRootAndKey(now.toFields()[0])
-        // this.faucetUsersTreeRoot.set(rootAfter);
+        const [rootAfter, _] = witness.computeRootAndKey(now.toFields()[0])
+        this.faucetUsersTreeRoot.set(rootAfter);
 
         // getAction does not work for berkeley
 
@@ -153,10 +154,10 @@ export class BetTokenContract extends SmartContract {
             amount: this.FAUCET_TOKEN_AMOUNT,
         });
 
-        // this.emitEvent('faucet', new Entry({
-        //     key: userKey,
-        //     value: Field(Date.now())
-        // }))
+        this.emitEvent('faucet', new Entry({
+            key: userKey,
+            value: Field(Date.now())
+        }))
     }
 
     // Useless for berkery until getAction does not work

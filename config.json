@@ -10,7 +10,8 @@
     "berkery-bet-app": {
       "url": "https://proxy.berkeley.minaexplorer.com/graphql",
       "keyPath": "keys/berkery-bet-app.json",
-      "fee": "0.5"
+      "fee": "0.5",
+      "smartContract": "BetAppContract"
     }
   }
 }
